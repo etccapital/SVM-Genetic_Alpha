@@ -65,6 +65,10 @@ class DataGenerator:
             self.log("Data for " + self.company_code + " ready to use")
 
     def calculate_technical_indicators(self, df, col_name, intervals):
+        """
+        takes dataframe, respctive column name and interval as parameters.
+        creates
+        """
         # get_RSI(df, col_name, intervals)  # faster but non-smoothed RSI
         get_RSI_smooth(df, col_name, intervals)  # momentum
         get_williamR(df, col_name, intervals)  # momentum
