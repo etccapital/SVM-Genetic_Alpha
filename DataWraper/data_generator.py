@@ -40,6 +40,8 @@ class DataGenerator:
         self.test_duration_years = 1
         self.logger.append_log("{} has data for {} to {}".format(data_path, self.batch_start_date,
                                                                  self.df.tail(1).iloc[0]['timestamp']))
+        
+        # Note: look into the base url API, may needs mofication.
 
         
     def log(self, text):
