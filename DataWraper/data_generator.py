@@ -163,7 +163,7 @@ class DataGenerator:
     def create_label_mean_reversion(self, df, col_name):
         """
         strategy as described at "https://decodingmarkets.com/mean-reversion-trading-strategy"
-
+        refer to mean reversion script.
         Label code : BUY => 1, SELL => 0, HOLD => 2
 
         params :
@@ -199,6 +199,7 @@ class DataGenerator:
 
     def create_label_short_long_ma_crossover(self, df, col_name, short, long):
         """
+        MA -> Moving average of the equity in the respectice time horizon.
         if short = 30 and long = 90,
         Buy when 30 day MA < 90 day MA
         Sell when 30 day MA > 90 day MA
