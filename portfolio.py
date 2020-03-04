@@ -91,8 +91,8 @@ def get_portfolio(stock_list, state_dt, para_window):
 
 if __name__ == '__main__':
 
-    pf = ['600536.SH', '000063.SZ', '000977.SZ', '600588.SH', '600845.SH'] Enter respective market ticker.
-    ans = get_portfolio(pf, '2019-08-23', 2019)
+    pf = ['600536.SH', '000063.SZ', '000977.SZ', '600588.SH', '600845.SH'] #此处换为对应生成50支对应Equity pick market ticker.
+    ans = get_portfolio(pf, '2019-08-23', 2019) 
     print('**************  Market Trend  ****************')
     print('Risk : ' + str(round(ans[0][0], 4)))
     print('Sharp ratio : ' + str(round(ans[0][2], 4)))
