@@ -14,6 +14,8 @@ import pandas as pd
 import time  as _time
 import requests
 
+# 整合api及数据架构，yahoofinance所用的json和qt用的tushare，cnn_alpha用的csv格式架构完全不同
+# 可以考虑找一个json to csv的parser，方便浏览.
 
 class YahooFinance:
     def __init__(self, ticker, result_range='1mo', start=None, end=None, interval='15m', dropna=True):
