@@ -90,6 +90,7 @@ def get_portfolio(stock_list, state_dt, para_window):
     return resu
 
 if __name__ == '__main__':
+    # 使用部分class <DataGenerator.GetTechinicalIndicators.> 及logger函数以统一整体算法workflow。
 
     pf = ['600536.SH', '000063.SZ', '000977.SZ', '600588.SH', '600845.SH'] #此处换为对应生成50支对应Equity pick market ticker.
     ans = get_portfolio(pf, '2019-08-23', 2019) 
