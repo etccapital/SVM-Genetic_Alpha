@@ -1,5 +1,3 @@
-#
-# Copyright (c) 2020. Asutosh Nayak (nayak.asutosh@ymail.com)
 
 import os
 import re
