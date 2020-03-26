@@ -15,7 +15,7 @@ from logger import Logger
 from secrets import api_key
 from utils import *
 
-
+# 数据收成器
 class DataGenerator:
     def __init__(self, company_code, data_path='./stock_history', output_path='./outputs', strategy_type='original',
                  update=False, logger: Logger = None):
@@ -39,7 +39,7 @@ class DataGenerator:
         self.logger.append_log("{} has data for {} to {}".format(data_path, self.batch_start_date,
                                                                  self.df.tail(1).iloc[0]['timestamp']))
         
-        # Note: look into the base url API, may needs mofication.
+        # Note: look into the base url API, 数据结构和token可能需要调整。
 
         
     def log(self, text):
@@ -61,7 +61,8 @@ class DataGenerator:
             download_save(self.BASE_URL + self.company_code, path_to_company_data, self.logger)
         else:
             self.log("Data for " + self.company_code + " ready to use")
-
+    
+    # 技术分析指标计算
     def calculate_technical_indicators(self, df, col_name, intervals):
         """
         takes dataframe, respctive column name and interval as parameters.
@@ -94,6 +95,8 @@ class DataGenerator:
         get_volume_delta(df)  # volume +1
         get_IBR(df)  # ready to use +1
 
+        
+    # 数据标签
     def create_labels(self, df, col_name, window_size=11):
         """
         Data is labeled as per the logic in research paper
@@ -146,7 +149,8 @@ class DataGenerator:
 
         pbar.close()
         return labels
-
+    
+    # 涨价标签
     def create_labels_price_rise(self, df, col_name):
         """
         labels data based on price rise on next day
@@ -157,7 +161,8 @@ class DataGenerator:
         df["labels"] = ((df[col_name] - df[col_name].shift()) > 0).astype(np.int)
         df = df[1:]
         df.reset_index(drop=True, inplace=True)
-
+    
+    # 均值回归标签
     def create_label_mean_reversion(self, df, col_name):
         """
         strategy as described at "https://decodingmarkets.com/mean-reversion-trading-strategy"
@@ -194,7 +199,8 @@ class DataGenerator:
                 labels[i] = 2
 
         return labels
-
+    
+    # 长短动态均值穿越
     def create_label_short_long_ma_crossover(self, df, col_name, short, long):
         """
         MA -> Moving average of the equity in the respectice time horizon.
@@ -234,7 +240,8 @@ class DataGenerator:
         print("labels count", np.unique(res, return_counts=True))
         df.drop(columns=['diff_prev', 'diff'], inplace=True)
         return res
-
+    
+    # 创建特性
     def create_features(self):
         if not os.path.exists(os.path.join(self.output_path, "df_" + self.company_code+".csv")) or self.update:
             df = pd.read_csv(self.data_path, engine='python')
@@ -279,7 +286,8 @@ class DataGenerator:
         # console_pretty_print_df(df.head())
         self.log("Number of Technical indicator columns for train/test are {}".format(len(list(df.columns)[7:])))
         return df
-
+    
+    # 特性选择
     def feature_selection(self):
         df_batch = self.df_by_date(None, 10)
         list_features = list(df_batch.loc[:, self.start_col:self.end_col].columns)
@@ -308,7 +316,8 @@ class DataGenerator:
         feat_idx = sorted(feat_idx[0:225])
         self.log(str(feat_idx))
         return feat_idx
-
+    
+    # 以日期排列的数据框
     def df_by_date(self, start_date=None, years=5):
         if not start_date:
             start_date = self.df.head(1).iloc[0]["timestamp"]
@@ -316,7 +325,8 @@ class DataGenerator:
         end_date = start_date + pd.offsets.DateOffset(years=years)
         df_batch = self.df[(self.df["timestamp"] >= start_date) & (self.df["timestamp"] <= end_date)]
         return df_batch
-
+    
+    # 获取数据
     def get_data(self, start_date=None, years=5):
         df_batch = self.df_by_date(start_date, years)
         x = df_batch.loc[:, self.start_col:self.end_col].values
@@ -332,7 +342,8 @@ class DataGenerator:
         y = self.one_hot_enc.transform(y.reshape(-1, 1))
 
         return x, y, df_batch, sample_weights
-
+    
+    # 获取样本配重
     def get_sample_weights(self, y):
         """
         calculate the sample weights based on class weights. Used for models with
@@ -353,7 +364,8 @@ class DataGenerator:
             # sample_weights = np.where(sample_weights == i, class_weights[int(i)], y_)
 
         return sample_weights
-
+    
+    # 获取滚动数据
     def get_rolling_data_next(self, start_date=None, window_size_yrs=6, cross_val_split=0.2):
         if not start_date:
             start_date = self.batch_start_date
