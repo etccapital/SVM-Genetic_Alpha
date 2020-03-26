@@ -47,7 +47,8 @@ class DataGenerator:
             self.logger.append_log(text)
         else:
             print(text)
-
+            
+    # 下载股票数据
     def download_stock_data(self):
         path_to_company_data = self.data_path
         print("path to company data:", path_to_company_data)
